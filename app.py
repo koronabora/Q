@@ -24,14 +24,6 @@ class Answer(db.Model):
     finished_by_timer = db.Column(db.Text, default=False)
     created = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    #def __init__(self, userId, userName, seed, answers, finishedByTimer, created):
-    #    self.userId = userId
-    #    self.userName = userName
-    #    self.seed = seed
-     #   self.answers = answers
-     #   self.finishedByTimer = finishedByTimer
-    #    self.created = created
-
     def __repr__(self):
         return f'({self.user}, {self.answer}, {self.created})'
 
@@ -63,15 +55,6 @@ class UserInstance:
     step = 0
     resultsData = {}
     finishedByTimerData = {}
-
-    #def __init__(self, userId, userName, sequence, step, resultsData, finishedByTimerData):
-    #    self.userId = userId
-    #    self.userName = userName
-    #    self.sequence = sequence
-    #    self.step = step
-    #    self.resultsData = resultsData
-    #    self.finishedByTimerData = finishedByTimerData
-
 
 gUserDataMap = {}
 
