@@ -174,7 +174,7 @@ def PrepareRequest(userInstance):
         return resp
     elif curStep > 0 and curStep <= len(gTasksDistribution[0]):
         pageIndex = gTasksDistribution[userInstance.sequence][userInstance.step-1]
-        timeout = gTimeouts[curStep] * 1000 * 60
+        timeout = gTimeouts[curStep-1] * 1000 * 60
         resp = make_response(render_template(f'{pageIndex}.html', userId=userInstance.userId, timeout=timeout))
         resp.set_cookie(gCookieUserIdKey, userInstance.userId)
         print(f'Loading page #{pageIndex} for user: {userInstance.userId}')
