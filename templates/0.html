@@ -1,0 +1,48 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Здравствуйте, добро пожаловать на тест!</p>
+
+<p>Введите, пожалуйста, своё ФИО (не менее 5 символов)</p>
+<p><input type="text" id="userData" name="userNameData"/></p>
+
+<p>Задания в тесте ограничены по времени, для подтверждения ответа нажмите кнопку "Готово". Если время на выполнение закончится, откроется на следующее задание, выполняйте его. Вернуться к предыдущим заданиям нельзя.</p>
+
+<button type="button" name="startButton" onclick="sendStart()" id="buttonishe" disabled="disabled">Начать тест</button>
+</body>
+<script>
+    function sendStart() {
+            let results = new Map();
+            results["userId"] = document.title;
+
+            let f0 = document.getElementById("userData");
+            results["userData"] = f0.value;
+
+            $.ajax({
+                url: '/start',
+                type: 'POST',
+                data: results,
+                success: function (response) {
+                  window.location.href = "/";
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    (function() {
+    $('input').keyup(function() {
+        var empty = false;
+        $('input').each(function() {if ($(this).val().length < 5) {empty = true;}});
+        if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+        else {$('#buttonishe').removeAttr('disabled');}
+    });})()
+
+</script>
+
+</html>

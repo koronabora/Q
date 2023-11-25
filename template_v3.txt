@@ -1,0 +1,46 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+
+<p><img alt="" src="{{url_for('static', filename='7_example.png')}}" width="100%" height="auto" /></p>
+
+<button type="button" name="nextButton" onclick="sendData()">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    document.getElementById('output').innerHTML = response;
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+</script>
+</body>
+</html>

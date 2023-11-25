@@ -1,0 +1,116 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Задание: имеется 8 неоконченных предложений. Выберите наиболее подходящее слово для завершения предложения, чтобы оно приобрело правильный смысл.</p>
+
+<hr />
+<p>1. У дерева всегда есть...</p>
+
+<p>а)&nbsp;листья; б)&nbsp;плоды; в)&nbsp;почки; г)&nbsp;корни; д)&nbsp;тень.</p>
+
+<p>Ответ:&nbsp;<input name="1" id="1" type="text" /></p>
+
+<hr />
+<p>2. Комментарий &mdash; это...</p>
+
+<p>а)&nbsp;закон; б)&nbsp;лекция; в)&nbsp;объяснение; г)&nbsp;следствие; д)&nbsp;намек.</p>
+
+<p>Ответ:&nbsp;<input name="2" id="2" type="text" /></p>
+
+<hr />
+<p>3. Противоположностью предательства является...</p>
+
+<p>а)&nbsp;любовь; б)&nbsp;тунеядство; в)&nbsp;хитрость; г)&nbsp;трусость; д)&nbsp;преданность.</p>
+
+<p>Ответ:&nbsp;<input name="3" id="3" type="text" /></p>
+
+<hr />
+<p>4. Женщины ... бывают выше мужчин.</p>
+
+<p>а)&nbsp;всегда; б)&nbsp;обычно; в)&nbsp;часто; г)&nbsp;никогда не; д)&nbsp;иногда.</p>
+
+<p>Ответ:&nbsp;<input name="4" id="4" type="text" /></p>
+
+<hr />
+<p>5. Обед не может состояться без...</p>
+
+<p>а)&nbsp;стола; б)&nbsp;сервиза; в)&nbsp;пищи; г)&nbsp;воды; д)&nbsp;голода.</p>
+
+<p>Ответ:&nbsp;<input name="5" id="5" type="text" /></p>
+
+<hr />
+<p>6. Занятием, противоположным отдыху, является...</p>
+
+<p>а)&nbsp;труд; б)&nbsp;забота; в)&nbsp;усталость; г)&nbsp;прогулка; д)&nbsp;тренировка.</p>
+
+<p>Ответ:&nbsp;<input name="6" id="6" type="text" /></p>
+
+<hr />
+<p>7. Для торговли необходимо иметь...</p>
+
+<p>а)&nbsp;магазин; б)&nbsp;деньги; в)&nbsp;прилавок; г)&nbsp;товар; д)&nbsp;весы.</p>
+
+<p>Ответ:&nbsp;<input name="7" id="7" type="text" /></p>
+
+<hr />
+<p>8. Когда спор кончается взаимной уступкой, это называется...</p>
+
+<p>а)&nbsp;конвенцией; б)&nbsp;компромиссом; в)&nbsp;развязкой; г)&nbsp;сговором; д)&nbsp;примирением.</p>
+
+<p>Ответ:&nbsp;<input name="8" id="8" type="text" /></p>
+
+<hr />
+<button type="button" name="nextButton" onclick="sendData()" id="buttonishe" disabled="disabled">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+
+            for (let i = 1; i <= 8; i++) {
+                str = "" + i;
+                results[str] = document.getElementById(str).value;
+            }
+
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    window.location.href = "/";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        (function() {
+        $('input').keyup(function() {
+            var empty = false;
+            $('input').each(function() {if ($(this).val() == '') {empty = true;}});
+            if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+            else {$('#buttonishe').removeAttr('disabled');}
+        });})()
+</script>
+</body>
+</html>

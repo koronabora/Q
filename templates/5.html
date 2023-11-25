@@ -1,0 +1,89 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Задание: Необходимо решить 6 задач. Задачи являются не столько арифметическими, сколько практическими, поэтому необходимо быть внимательным в отношении практического смысла ваших ответов.</p>
+
+<hr />
+<p>1. У мальчика было 100 монет, из них он истратил 15. Сколько монет у него осталось?</p>
+
+<p>Ответ:&nbsp;<input name="1" id="1" type="text" /></p>
+
+<hr />
+<p>2. Сколько километров проедет автомобиль за 9 часов, если его скорость составляет 70 км/час?</p>
+
+<p>Ответ:&nbsp;<input name="2" id="2" type="text" /></p>
+
+<hr />
+<p>3. Фрукты в 15 ящиках весят 280 кг, а каждый пустой ящик весит 3 кг. Каков чистый вес фруктов?</p>
+
+<p>Ответ:&nbsp;<input name="3" id="3" type="text" /></p>
+
+<hr />
+<p>4. Траншею 6 человек выкопают за 72 часа. За сколько часов выкопают такую же траншею 18 человек?</p>
+
+<p>Ответ:&nbsp;<input name="4" id="4" type="text" /></p>
+
+<hr />
+<p>5. Упаковка из трех шариковых ручек стоит 5 монет. Сколько шариковых ручек можно приобрести на 60 монет?</p>
+
+<p>Ответ:&nbsp;<input name="5" id="5" type="text" /></p>
+
+<hr />
+<p>6. Человек пробегает 1,5м за четверть секунды. Какое расстояние этот человек пробежит за 10 секунд?</p>
+
+<p>Ответ:&nbsp;<input name="6" id="6" type="text" /></p>
+<hr />
+<button type="button" name="nextButton" onclick="sendData()" id="buttonishe" disabled="disabled">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+
+            for (let i = 1; i <= 6; i++) {
+                str = "" + i;
+                results[str] = document.getElementById(str).value;
+            }
+
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    window.location.href = "/";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        (function() {
+        $('input').keyup(function() {
+            var empty = false;
+            $('input').each(function() {if ($(this).val() == '') {empty = true;}});
+            if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+            else {$('#buttonishe').removeAttr('disabled');}
+        });})()
+</script>
+</body>
+</html>

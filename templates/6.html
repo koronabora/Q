@@ -1,0 +1,80 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Задание: представлено 7 рядов чисел. Необходимо продолжить числовой ряд на основании обнаруженной вами особенности этой связи чисел.</p>
+
+<hr />
+<p>1. 6,&nbsp;9,&nbsp;12,&nbsp;15,&nbsp;18,&nbsp;21,&nbsp;24,&nbsp;<input name="1" id="1" type="text" /></p>
+
+<hr />
+<p>2. 16,&nbsp;17,&nbsp;19,&nbsp;20,&nbsp;22,&nbsp;23,&nbsp;25,&nbsp;<input name="2" id="2" type="text" /></p>
+
+<hr />
+<p>3. 19,&nbsp;16,&nbsp;22,&nbsp;19,&nbsp;25,&nbsp;22,&nbsp;28,&nbsp;<input name="3" id="3" type="text" /></p>
+
+<hr />
+<p>4. 17,&nbsp;13,&nbsp;18,&nbsp;14,&nbsp;19,&nbsp;15,&nbsp;20,&nbsp;<input name="4" id="4" type="text" /></p>
+
+<hr />
+<p>5. 4,&nbsp;6,&nbsp;12,&nbsp;14,&nbsp;28,&nbsp;30,&nbsp;60,&nbsp;<input name="5" id="5" type="text" /></p>
+
+<hr />
+<p>6. 26,&nbsp;28,&nbsp;25,&nbsp;29,&nbsp;24,&nbsp;30,&nbsp;23,&nbsp;<input name="6" id="6" type="text" /></p>
+
+<hr />
+<p>7. 29,&nbsp;26,&nbsp;13,&nbsp;39,&nbsp;36,&nbsp;18,&nbsp;54,&nbsp;<input name="7" id="7" type="text" /></p>
+<hr />
+<button type="button" name="nextButton" onclick="sendData()" id="buttonishe" disabled="disabled">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+
+            for (let i = 1; i <= 7; i++) {
+                str = "" + i;
+                results[str] = document.getElementById(str).value;
+            }
+
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    window.location.href = "/";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        (function() {
+        $('input').keyup(function() {
+            var empty = false;
+            $('input').each(function() {if ($(this).val() == '') {empty = true;}});
+            if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+            else {$('#buttonishe').removeAttr('disabled');}
+        });})()
+</script>
+</body>
+</html>

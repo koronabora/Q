@@ -1,0 +1,81 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Задание: имеется ряд из пяти разных кубиков, обозначенных буквами («а», «б», «в», «г», «д»). Кубы расположены так, что из шести - граней вы у каждого куба видите три. </p>
+
+<p>Далее дается ряд, в котором расположены эти кубы, но повернутые по-новому. Необходимо найти какой кубик в первом ряду соответствует кубику из второго ряда.</p>
+ 
+<p>В перевернутых кубах, естественно, могут появиться и новые значки.</p>
+
+<p>Образец.</p>
+
+<p><img alt="" src="{{url_for('static', filename='8_example.png')}}" width="100%" height="auto" /></p>
+
+<p>Решение.</p>
+
+<p>Куб 01 представляет измененное положение куба «а». Второй куб (02) соответствует кубу «д», третий (03) — кубу «б», (04) — «в», (05) — «г».</p>
+
+<hr />
+<p>Задание:</p>
+<p><img alt="" src="{{url_for('static', filename='8.png')}}" width="100%" height="auto" /></p>
+<p>Ответ 1:&nbsp;<input name="1" id="1" type="text" /></p>
+<p>Ответ 2:&nbsp;<input name="2" id="2" type="text" /></p>
+<p>Ответ 3:&nbsp;<input name="3" id="3" type="text" /></p>
+<p>Ответ 4:&nbsp;<input name="4" id="4" type="text" /></p>
+<p>Ответ 5:&nbsp;<input name="5" id="5" type="text" /></p>
+<p>Ответ 6:&nbsp;<input name="6" id="6" type="text" /></p>
+<hr />
+<button type="button" name="nextButton" onclick="sendData()" id="buttonishe" disabled="disabled">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+
+            for (let i = 1; i <= 6; i++) {
+                str = "" + i;
+                results[str] = document.getElementById(str).value;
+            }
+
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    window.location.href = "/";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        (function() {
+        $('input').keyup(function() {
+            var empty = false;
+            $('input').each(function() {if ($(this).val() == '') {empty = true;}});
+            if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+            else {$('#buttonishe').removeAttr('disabled');}
+        });})()
+</script>
+</body>
+</html>

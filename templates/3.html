@@ -1,0 +1,109 @@
+<!DOCTYPE html> <html lang="ru-RU">
+<head>
+    <title>{{userId}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" charset="UTF-8">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<body>
+<p>Задание: дано 7 групп слов. Первая пара слов полная — состоит из двух взаимосвязанных по смыслу слов. Необходимо выбрать подходящее по смыслу слово, чтобы слова во второй паре были связаны аналогично первой паре.</p>
+
+<hr />
+<p>1. Школа &mdash; директор; кружок &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;председатель; б)&nbsp;член; в)&nbsp;руководитель; г)&nbsp;заведующий; д)&nbsp;посетитель.</p>
+
+<p>Ответ:&nbsp;<input name="1" id="1" type="text" /></p>
+
+<hr />
+<p>2. Часы &mdash; время; термометр &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;прибор; б)&nbsp;измерение; в)&nbsp;ртуть; г)&nbsp;тепло; д)&nbsp;температура.</p>
+
+<p>Ответ:&nbsp;<input name="2" id="2" type="text" /></p>
+
+<hr />
+<p>3. Искать &mdash; находить; размышлять &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;запоминать; б)&nbsp;приходить к выводу; в)&nbsp;расследовать; г)&nbsp;петь; д)&nbsp;вспоминать.</p>
+
+<p>Ответ:&nbsp;<input name="3" id="3" type="text" /></p>
+
+<hr />
+<p>4. Круг &mdash; шар; квадрат &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;призма; б)&nbsp;прямоугольник; в)&nbsp;тело; г)&nbsp;геометрия; д)&nbsp;куб.</p>
+
+<p>Ответ:&nbsp;<input name="4" id="4" type="text" /></p>
+
+<hr />
+<p>5. Ель &mdash; дуб; стол &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;мебель; б)&nbsp;шкаф; в)&nbsp;скатерть; г)&nbsp;гардероб; д)&nbsp;гарнитур.</p>
+
+<p>Ответ:&nbsp;<input name="5" id="5" type="text" /></p>
+
+<hr />
+<p>6. Животное &mdash; коза; пища &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;продукт; 6)&nbsp;еда; в)&nbsp;обед; г)&nbsp;хлеб; д)&nbsp;кухня.</p>
+
+<p>Ответ:&nbsp;<input name="6" id="6" type="text" /></p>
+
+<hr />
+<p>7. Голод &mdash; худоба; труд &mdash;&nbsp;?</p>
+
+<p>а)&nbsp;усилие; б)&nbsp;усталость; в)&nbsp;энтузиазм; г)&nbsp;плата; д)&nbsp;отдых.</p>
+
+<p>Ответ:&nbsp;<input name="7" id="7" type="text" /></p>
+
+<hr />
+<button type="button" name="nextButton" onclick="sendData()" id="buttonishe" disabled="disabled">Готово</button>
+
+<script>
+	var timerValue ={{timeout}}
+
+    setInterval(function() {
+                console.log("Таймер сработал:");
+                console.log(timerValue);
+                sendData(true);
+            },
+            timerValue);
+
+    function sendData(byTimer = false) {
+            let results = new Map();
+            results["userId"] = document.title;
+            if (byTimer) {
+                results["byTimer"] = "1"
+            } else {
+                results["byTimer"] = "0"
+            }
+
+            for (let i = 1; i <= 7; i++) {
+                str = "" + i;
+                results[str] = document.getElementById(str).value;
+            }
+
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: results,
+                success: function(response) {
+                    window.location.href = "/";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        (function() {
+        $('input').keyup(function() {
+            var empty = false;
+            $('input').each(function() {if ($(this).val() == '') {empty = true;}});
+            if (empty) {$('#buttonishe').attr('disabled', 'disabled');}
+            else {$('#buttonishe').removeAttr('disabled');}
+        });})()
+</script>
+</body>
+</html>
