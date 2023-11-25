@@ -158,14 +158,6 @@ def FillDataAndChangeIndex(request):
     userInstance.step += 1
     print(f'For user {userId} changed step: {userInstance.step-1} -> {userInstance.step}')
 
-
-def GetPageIndexAndTimeout(userInstance):
-    if userInstance.step > 0:
-        pageIndex = gTasksDistribution[userInstance.sequence][userInstance.step]
-        timeout = gTimeouts[pageIndex - 1] * 1000 * 60
-        return pageIndex, timeout
-    return 0, 100000
-
 def PrepareRequest(userInstance):
     curStep = userInstance.step
 
@@ -182,7 +174,7 @@ def PrepareRequest(userInstance):
         return resp
     elif curStep > 0 and curStep <= len(gTasksDistribution[0]):
         pageIndex = gTasksDistribution[userInstance.sequence][userInstance.step-1]
-        timeout = gTimeouts[pageIndex - 1] * 1000 * 60
+        timeout = gTimeouts[curStep] * 1000 * 60
         resp = make_response(render_template(f'{pageIndex}.html', userId=userInstance.userId, timeout=timeout))
         resp.set_cookie(gCookieUserIdKey, userInstance.userId)
         print(f'Loading page #{pageIndex} for user: {userInstance.userId}')
